@@ -90,6 +90,13 @@ Follow-up decisions from the plan review:
 > uv-managed Python smoke tool and a seed script, and write the full documentation
 > set (architecture, API, Docker, development, README).
 
+## 14 — Verify the merged main and add CI
+
+> All PRs are merged (and the Dependabot bump reverted). Verify the merged state
+> actually installs, typechecks, lints, tests and builds, then add a GitHub
+> Actions workflow that runs the same checks.
+
+
 
 
 
