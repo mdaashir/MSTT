@@ -15,6 +15,7 @@ import { EmptyState, ErrorState, LoadingState } from './states.js';
 export function TicketList({
   status,
   sort,
+  search = '',
   refreshToken = 0,
   onStatusChange,
   onSortChange,
@@ -22,6 +23,8 @@ export function TicketList({
 }: {
   status: StatusFilter;
   sort: SortOrder;
+  /** Already debounced by the shell; empty means no title filter. */
+  search?: string;
   refreshToken?: number;
   onStatusChange(next: StatusFilter): void;
   onSortChange(next: SortOrder): void;
@@ -33,6 +36,7 @@ export function TicketList({
     {
       status: status === 'all' ? undefined : (status as Status),
       sort,
+      q: search.trim() === '' ? undefined : search.trim(),
     },
     refreshToken,
   );

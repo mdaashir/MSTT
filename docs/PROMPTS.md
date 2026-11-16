@@ -74,6 +74,12 @@ Follow-up decisions from the plan review:
 > dropdown that PATCHes immediately with saving and error feedback, and updates the
 > list when the status changes.
 
+## 11 — Search, sort and delete UI
+
+> Add a debounced title search, keep the newest/oldest toggle, and add delete with a
+> confirmation step. All three go through API params, not client-side filtering.
+
+
 
 
 
