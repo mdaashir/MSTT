@@ -19,7 +19,7 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
-    "types": ["vite/client"]
+    "types": ["vite/client", "vitest/globals"]
   },
   "include": ["src", "vite.config.ts"]
 }
