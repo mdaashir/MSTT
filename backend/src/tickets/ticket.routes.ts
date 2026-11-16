@@ -2,7 +2,12 @@ import type { Router } from 'express';
 import express from 'express';
 import { parseOrThrow } from '../middleware/validate.js';
 import { requireJsonObject } from '../middleware/errorHandler.js';
-import { createTicketSchema, listTicketsQuerySchema, ticketIdSchema } from './ticket.schema.js';
+import {
+  createTicketSchema,
+  listTicketsQuerySchema,
+  ticketIdSchema,
+  updateTicketSchema,
+} from './ticket.schema.js';
 import type { TicketService } from './ticket.service.js';
 
 /**
@@ -31,6 +36,14 @@ export function createTicketRouter(service: TicketService): Router {
   router.get('/:id', (req, res) => {
     const id = parseOrThrow(ticketIdSchema, req.params.id);
     res.status(200).json(service.getById(id));
+  });
+
+  // PATCH rather than PUT: only the fields present in the body change, which is
+  // what "update the status" from the UI needs and what the schema enforces.
+  router.patch('/:id', requireJsonObject, (req, res) => {
+    const id = parseOrThrow(ticketIdSchema, req.params.id);
+    const input = parseOrThrow(updateTicketSchema, req.body);
+    res.status(200).json(service.update(id, input));
   });
 
   return router;
