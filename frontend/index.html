@@ -3,7 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Support Ticket Tracker</title>
+
+    <title>Support Ticket Tracker — Track and Resolve Support Tickets</title>
+    <meta
+      name="description"
+      content="A lightweight support ticket tracker. Create tickets, set Low, Medium or High priority, filter by status, search by title and move tickets from Open to Resolved."
+    />
+    <!-- Long enough to be useful in results, short enough not to be truncated. -->
+    <meta name="keywords" content="support tickets, ticket tracker, issue tracking, helpdesk, React, Express, SQLite" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="__SITE_URL__/" />
+
+    <!-- Social sharing. Absolute URLs are required by Open Graph. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Support Ticket Tracker" />
+    <meta property="og:title" content="Support Ticket Tracker — Track and Resolve Support Tickets" />
+    <meta
+      property="og:description"
+      content="Create tickets, set priority, filter by status and move them from Open to Resolved."
+    />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/og-image.svg" />
+    <meta property="og:image:alt" content="Support Ticket Tracker" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Support Ticket Tracker" />
+    <meta
+      name="twitter:description"
+      content="Create tickets, set priority, filter by status and move them from Open to Resolved."
+    />
+    <meta name="twitter:image" content="__SITE_URL__/og-image.svg" />
+
+    <!-- `theme-color` tints the browser chrome on mobile. -->
+    <meta name="theme-color" content="#1f6feb" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!--
+      Styled so the page is legible before the JS bundle parses. React replaces
+      this node on mount, so this is shell styling, not duplicated app CSS.
+    -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #f6f7f9;
+        color: #1b1f24;
+        font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      #root:empty::before {
+        content: 'Loading tickets…';
+        display: block;
+        padding: 24px 16px;
+        color: #5c6570;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
