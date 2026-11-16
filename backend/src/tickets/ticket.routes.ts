@@ -2,7 +2,7 @@ import type { Router } from 'express';
 import express from 'express';
 import { parseOrThrow } from '../middleware/validate.js';
 import { requireJsonObject } from '../middleware/errorHandler.js';
-import { createTicketSchema, listTicketsQuerySchema } from './ticket.schema.js';
+import { createTicketSchema, listTicketsQuerySchema, ticketIdSchema } from './ticket.schema.js';
 import type { TicketService } from './ticket.service.js';
 
 /**
@@ -26,6 +26,11 @@ export function createTicketRouter(service: TicketService): Router {
   router.get('/', (req, res) => {
     const query = parseOrThrow(listTicketsQuerySchema, req.query);
     res.status(200).json(service.list(query));
+  });
+
+  router.get('/:id', (req, res) => {
+    const id = parseOrThrow(ticketIdSchema, req.params.id);
+    res.status(200).json(service.getById(id));
   });
 
   return router;
