@@ -22,6 +22,7 @@ export type TicketService = {
   list(query: ListTicketsQuery): Ticket[];
   getById(id: number): Ticket;
   update(id: number, input: UpdateTicketInput): Ticket;
+  delete(id: number): void;
 };
 
 export function createTicketService(repository: TicketRepository): TicketService {
@@ -55,6 +56,14 @@ export function createTicketService(repository: TicketRepository): TicketService
         throw ApiError.notFound(`Ticket ${id} not found`);
       }
       return updated;
+    },
+
+    delete(id) {
+      // Deleting something that is already gone is a 404, not a silent success:
+      // it usually means the client is working from a stale list.
+      if (!repository.delete(id)) {
+        throw ApiError.notFound(`Ticket ${id} not found`);
+      }
     },
   };
 }

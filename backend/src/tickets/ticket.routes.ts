@@ -46,5 +46,12 @@ export function createTicketRouter(service: TicketService): Router {
     res.status(200).json(service.update(id, input));
   });
 
+  router.delete('/:id', (req, res) => {
+    const id = parseOrThrow(ticketIdSchema, req.params.id);
+    service.delete(id);
+    // 204 with no body: nothing meaningful to return once the row is gone.
+    res.status(204).send();
+  });
+
   return router;
 }
