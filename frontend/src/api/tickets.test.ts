@@ -10,9 +10,19 @@ import { ApiClientError } from './errors.js';
  * way a failed response is surfaced.
  */
 
-const lastCall = () => {
+/**
+ * The arguments of the most recent `fetch` call.
+ *
+ * Throws instead of returning undefined: an empty call list means the test forgot
+ * to stub `fetch`, and a clear failure message beats a vague type error.
+ */
+const lastCall = (): [RequestInfo | URL, RequestInit | undefined] => {
   const calls = vi.mocked(fetch).mock.calls;
-  return calls[calls.length - 1];
+  const call = calls[calls.length - 1];
+  if (!call) {
+    throw new Error('fetch was not called');
+  }
+  return [call[0], call[1]];
 };
 
 const jsonOk = (body: unknown) =>

@@ -1,0 +1,39 @@
+# One command brings up the whole stack: `docker compose up --build`.
+#
+# The UI is served by nginx on :8080 and proxies /api to the API container, so
+# the browser only ever talks to one origin and CORS stays out of the picture.
+
+services:
+  api:
+    build:
+      context: ./backend
+    image: ticket-tracker-api:local
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # Named volume path, declared below so a restart keeps the tickets.
+      DATABASE_PATH: /app/data/tickets.db
+      # nginx serves the UI on 8080; this is the origin CORS allows.
+      CORS_ORIGIN: http://localhost:8080
+    volumes:
+      - ticket-data:/app/data
+    ports:
+      # Also exposed directly for debugging with curl or the smoke tool.
+      - '3000:3000'
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+    image: ticket-tracker-web:local
+    depends_on:
+      api:
+        # Wait for the health check rather than just the container start, so the
+        # first proxied request cannot hit a dead socket.
+        condition: service_healthy
+    ports:
+      - '8080:80'
+    restart: unless-stopped
+
+volumes:
+  ticket-data:

@@ -1,0 +1,10 @@
+[project]
+name = "ticket-smoke"
+version = "1.0.0"
+description = "End-to-end smoke check for the ticket API"
+requires-python = ">=3.12"
+dependencies = ["httpx>=0.27"]
+
+[tool.uv]
+# The image builds from this exactly, so float the interpreter version.
+package = false
