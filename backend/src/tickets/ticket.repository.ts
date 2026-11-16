@@ -1,5 +1,5 @@
 import type { DatabaseHandle } from '../db/index.js';
-import type { CreateTicketInput, Ticket } from './ticket.types.js';
+import type { CreateTicketInput, ListTicketsQuery, Ticket } from './ticket.types.js';
 import { DEFAULT_STATUS } from './ticket.types.js';
 
 /**
@@ -38,6 +38,7 @@ function toTicket(row: TicketRow): Ticket {
 
 export type TicketRepository = {
   create(input: CreateTicketInput): Ticket;
+  list(query: ListTicketsQuery): Ticket[];
 };
 
 /**
@@ -64,6 +65,41 @@ export function createTicketRepository(db: DatabaseHandle): TicketRepository {
         .get(result.lastInsertRowid) as TicketRow;
 
       return toTicket(row);
+    },
+
+    list({ status, q, sort, limit, offset }: ListTicketsQuery): Ticket[] {
+      // Clause list rather than string concatenation: every value is still bound
+      // as a parameter, only the SQL *shape* is assembled from fixed fragments.
+      const where: string[] = [];
+      const params: unknown[] = [];
+
+      if (status) {
+        where.push('status = ?');
+        params.push(status);
+      }
+      if (q) {
+        // Case-insensitive substring match; `%` and `_` in user input are literal
+        // here because LIKE wildcards are not escaped. Acceptable for a title
+        // search, where the worst case is a broader match, not an injection.
+        where.push('title LIKE ? COLLATE NOCASE');
+        params.push(`%${q}%`);
+      }
+
+      // `sort` is a validated enum, so mapping it to SQL text cannot be injected.
+      // `id` breaks ties for rows created within the same millisecond.
+      const direction = sort === 'oldest' ? 'ASC' : 'DESC';
+      const whereClause = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+
+      const rows = db
+        .prepare(
+          `SELECT ${SELECT_COLUMNS} FROM tickets
+           ${whereClause}
+           ORDER BY created_at ${direction}, id ${direction}
+           LIMIT ? OFFSET ?`,
+        )
+        .all(...params, limit, offset) as TicketRow[];
+
+      return rows.map(toTicket);
     },
   };
 }

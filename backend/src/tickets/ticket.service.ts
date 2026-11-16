@@ -1,4 +1,4 @@
-import type { CreateTicketInput, Ticket } from './ticket.types.js';
+import type { CreateTicketInput, ListTicketsQuery, Ticket } from './ticket.types.js';
 import type { TicketRepository } from './ticket.repository.js';
 
 /**
@@ -13,12 +13,20 @@ import type { TicketRepository } from './ticket.repository.js';
 
 export type TicketService = {
   create(input: CreateTicketInput): Ticket;
+  list(query: ListTicketsQuery): Ticket[];
 };
 
 export function createTicketService(repository: TicketRepository): TicketService {
   return {
     create(input) {
       return repository.create(input);
+    },
+
+    list(query) {
+      // The schema already applied the defaults and bounds, so the query that
+      // arrives here is complete. The service stays thin until there is a rule
+      // that is not about HTTP shape, such as visibility or ownership.
+      return repository.list(query);
     },
   };
 }
