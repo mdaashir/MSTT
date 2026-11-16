@@ -50,6 +50,13 @@ Follow-up decisions from the plan review:
 > Add DELETE /api/tickets/:id returning 204 with no body. Hard delete, 404 for an
 > unknown id.
 
+## 7 — Backend tests
+
+> Add vitest + supertest tests against in-memory SQLite covering create and every
+> validation failure, list/filter/search/sort/pagination, get found and 404, patch
+> valid and invalid, delete, and the default status.
+
+
 
 
 
