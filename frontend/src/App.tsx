@@ -3,6 +3,7 @@ import type { SortOrder } from './types.js';
 import type { StatusFilter } from './components/FilterBar.js';
 import { TicketList } from './components/TicketList.js';
 import { TicketForm } from './components/TicketForm.js';
+import { TicketDetails } from './components/TicketDetails.js';
 
 /**
  * Application shell.
@@ -57,10 +58,14 @@ export function App() {
                 <p className="muted">Select a ticket to see its full description.</p>
               </section>
             ) : (
-              <section className="panel">
-                <h2>Details</h2>
-                <p className="muted">Ticket #{selectedId} selected.</p>
-              </section>
+              <TicketDetails
+                id={selectedId}
+                onUpdated={() => {
+                  // A status change affects the list too: it may move into or out
+                  // of the active filter, so re-read from the server.
+                  refreshList();
+                }}
+              />
             )}
           </aside>
         </div>

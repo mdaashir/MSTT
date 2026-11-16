@@ -68,6 +68,13 @@ Follow-up decisions from the plan review:
 > server 400 back onto the matching fields, and make the new ticket appear without
 > a manual reload.
 
+## 10 — Ticket details and status update UI
+
+> Add the details view with the full description and all ticket info, plus a status
+> dropdown that PATCHes immediately with saving and error feedback, and updates the
+> list when the status changes.
+
+
 
 
 
