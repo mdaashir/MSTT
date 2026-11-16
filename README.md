@@ -57,6 +57,11 @@ it to the API container in Docker. No host is hardcoded anywhere.
 | Docker + Compose | any recent | The containerised stack |
 | uv | optional | The Python smoke tool |
 
+`better-sqlite3` is a native module that ships `binding.gyp` without an install
+script, so `npm ci` compiles it and needs `python3 make g++`. Docker ships that
+in its build stage and CI installs it explicitly; see
+[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md#prerequisites).
+
 ---
 
 ## Database and setup

@@ -8,9 +8,21 @@
 | Docker | optional | Only needed for the containerised stack |
 | uv | optional | Only needed for the Python smoke tool |
 
-`better-sqlite3` is a native module. On Windows, Node 20+ has prebuilt binaries
-for the published versions; on alpine/musl it compiles, which is why the Docker
-build stage installs a toolchain.
+`better-sqlite3` is a native module and it ships `binding.gyp` **without** an
+`install` script. That means npm treats it as a gyp package and runs
+`node-gyp rebuild` during `npm ci` — on every platform, not just musl. The build
+needs a C/C++ toolchain and Python:
+
+| Platform | How it is satisfied |
+| --- | --- |
+| Docker | `apk add python3 make g++` in the API image's build stage |
+| GitHub Actions | `sudo apt-get install python3 make g++` in the backend job |
+| Windows | Visual Studio Build Tools + Python (node-gyp finds it automatically) |
+| macOS | Xcode command line tools (already present with Node) |
+
+If `npm ci` fails with `gyp ERR! find Python`, that is the missing piece — not the
+code, and not the lockfile. `npm install` masks it by reusing an already-built
+binary, which is why the two commands can disagree.
 
 ## First run
 
@@ -74,6 +86,35 @@ frontend/
   src/components/ views and shared pieces
 tools/smoke/      uv-managed end-to-end checks
 docs/             this documentation set
+```
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request
+targeting it. Both packages are checked in parallel, so a backend failure never
+hides a frontend one:
+
+| Job | Steps |
+| --- | --- |
+| Backend | toolchain, `npm ci`, typecheck, lint, test, build |
+| Frontend | `npm ci`, typecheck, lint, test, build |
+
+Each job caches npm on its own lockfile, and a superseded run on the same ref is
+cancelled rather than paid for twice.
+
+The backend job installs `python3 make g++` **before** `npm ci` for the reason
+above. Dropping that step is the single most likely way to "break CI" here.
+
+To run exactly what CI runs, from either package:
+
+```bash
+npm ci --include=dev && npm run typecheck && npm run lint && npm test && npm run build
+```
+
+Validate the workflow itself before pushing changes to it:
+
+```bash
+docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest
 ```
 
 ## Testing
