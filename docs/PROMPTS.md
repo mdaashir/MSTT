@@ -56,6 +56,13 @@ Follow-up decisions from the plan review:
 > validation failure, list/filter/search/sort/pagination, get found and 404, patch
 > valid and invalid, delete, and the default status.
 
+## 8 — Ticket list UI
+
+> Build the typed API client, the hooks and the list view: filter chips, sort
+> toggle, loading/error/empty states, click a row to open details, and pagination
+> through the API rather than the client.
+
+
 
 
 
