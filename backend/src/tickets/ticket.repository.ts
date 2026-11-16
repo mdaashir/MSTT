@@ -39,6 +39,7 @@ function toTicket(row: TicketRow): Ticket {
 export type TicketRepository = {
   create(input: CreateTicketInput): Ticket;
   list(query: ListTicketsQuery): Ticket[];
+  findById(id: number): Ticket | undefined;
 };
 
 /**
@@ -100,6 +101,16 @@ export function createTicketRepository(db: DatabaseHandle): TicketRepository {
         .all(...params, limit, offset) as TicketRow[];
 
       return rows.map(toTicket);
+    },
+
+    findById(id: number): Ticket | undefined {
+      // `undefined` rather than a thrown error: "not found" is a rule the service
+      // decides on, and the repository should not know about HTTP semantics.
+      const row = db.prepare(`SELECT ${SELECT_COLUMNS} FROM tickets WHERE id = ?`).get(id) as
+        | TicketRow
+        | undefined;
+
+      return row ? toTicket(row) : undefined;
     },
   };
 }

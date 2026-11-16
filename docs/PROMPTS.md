@@ -34,5 +34,12 @@ Follow-up decisions from the plan review:
 > Add GET /api/tickets with status filter, case-insensitive title search, newest/
 > oldest sort and limit/offset pagination. It must keep returning a plain array.
 
+## 4 — Get one ticket
+
+> Add GET /api/tickets/:id. Validate the id as a positive integer, return 404 with
+> the shared error shape for an unknown id, and keep the not-found decision in the
+> service layer.
+
+
 
 
