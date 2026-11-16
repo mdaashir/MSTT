@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Local database files (SQLite)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+backend/data/
+
+# Environment files — only the *.example variants are committed
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Python tooling (uv) — the smoke tool keeps only its lockfile and sources
+tools/**/.venv/
+tools/**/__pycache__/
+*.pyc
+tools/**/.pytest_cache/
+
+# Logs, OS noise, editor state
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+coverage/
