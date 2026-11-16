@@ -79,6 +79,12 @@ Follow-up decisions from the plan review:
 > Add a debounced title search, keep the newest/oldest toggle, and add delete with a
 > confirmation step. All three go through API params, not client-side filtering.
 
+## 12 — Frontend tests and responsive CSS
+
+> Add frontend tests for the error mapping, the API client's query building and the
+> formatting helpers, and finish the responsive layout for narrow screens.
+
+
 
 
 
