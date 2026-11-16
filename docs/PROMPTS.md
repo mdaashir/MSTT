@@ -40,6 +40,12 @@ Follow-up decisions from the plan review:
 > the shared error shape for an unknown id, and keep the not-found decision in the
 > service layer.
 
+## 5 — Update a ticket
+
+> Add PATCH /api/tickets/:id. Only the fields present in the body change, at least
+> one field is required, updated_at is refreshed, and an unknown id is a 404.
+
+
 
 
 

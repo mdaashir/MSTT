@@ -1,5 +1,5 @@
 import type { DatabaseHandle } from '../db/index.js';
-import type { CreateTicketInput, ListTicketsQuery, Ticket } from './ticket.types.js';
+import type { CreateTicketInput, ListTicketsQuery, Ticket, UpdateTicketInput } from './ticket.types.js';
 import { DEFAULT_STATUS } from './ticket.types.js';
 
 /**
@@ -40,6 +40,7 @@ export type TicketRepository = {
   create(input: CreateTicketInput): Ticket;
   list(query: ListTicketsQuery): Ticket[];
   findById(id: number): Ticket | undefined;
+  update(id: number, input: UpdateTicketInput): Ticket | undefined;
 };
 
 /**
@@ -48,6 +49,20 @@ export type TicketRepository = {
  * to leak between requests.
  */
 export function createTicketRepository(db: DatabaseHandle): TicketRepository {
+  /**
+   * Local rather than a method reaching for `this`, so `update` can read the row
+   * back without breaking if a caller ever destructures the repository.
+   */
+  function findById(id: number): Ticket | undefined {
+    // `undefined` rather than a thrown error: "not found" is a rule the service
+    // decides on, and the repository should not know about HTTP semantics.
+    const row = db.prepare(`SELECT ${SELECT_COLUMNS} FROM tickets WHERE id = ?`).get(id) as
+      | TicketRow
+      | undefined;
+
+    return row ? toTicket(row) : undefined;
+  }
+
   return {
     create(input: CreateTicketInput): Ticket {
       // One timestamp for both columns: a row created and read moments later
@@ -103,14 +118,41 @@ export function createTicketRepository(db: DatabaseHandle): TicketRepository {
       return rows.map(toTicket);
     },
 
-    findById(id: number): Ticket | undefined {
-      // `undefined` rather than a thrown error: "not found" is a rule the service
-      // decides on, and the repository should not know about HTTP semantics.
-      const row = db.prepare(`SELECT ${SELECT_COLUMNS} FROM tickets WHERE id = ?`).get(id) as
-        | TicketRow
-        | undefined;
+    findById,
 
-      return row ? toTicket(row) : undefined;
+    update(id: number, input: UpdateTicketInput): Ticket | undefined {
+      // Build the SET list from the keys the caller actually sent. This is a
+      // partial update by construction: absent fields keep their current value
+      // instead of being overwritten with undefined.
+      const columns: Record<keyof UpdateTicketInput, string> = {
+        title: 'title',
+        description: 'description',
+        priority: 'priority',
+        status: 'status',
+      };
+
+      const assignments: string[] = [];
+      const params: unknown[] = [];
+
+      for (const key of Object.keys(input) as (keyof UpdateTicketInput)[]) {
+        assignments.push(`${columns[key]} = ?`);
+        params.push(input[key]);
+      }
+
+      // Always refresh updated_at; that is what the column is for.
+      assignments.push('updated_at = ?');
+      params.push(new Date().toISOString());
+
+      const result = db
+        .prepare(`UPDATE tickets SET ${assignments.join(', ')} WHERE id = ?`)
+        .run(...params, id);
+
+      // No row matched: the caller asked to update something that does not exist.
+      if (result.changes === 0) {
+        return undefined;
+      }
+
+      return findById(id);
     },
   };
 }

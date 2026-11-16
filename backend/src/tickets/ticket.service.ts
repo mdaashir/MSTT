@@ -1,4 +1,9 @@
-import type { CreateTicketInput, ListTicketsQuery, Ticket } from './ticket.types.js';
+import type {
+  CreateTicketInput,
+  ListTicketsQuery,
+  Ticket,
+  UpdateTicketInput,
+} from './ticket.types.js';
 import type { TicketRepository } from './ticket.repository.js';
 import { ApiError } from '../errors.js';
 
@@ -16,6 +21,7 @@ export type TicketService = {
   create(input: CreateTicketInput): Ticket;
   list(query: ListTicketsQuery): Ticket[];
   getById(id: number): Ticket;
+  update(id: number, input: UpdateTicketInput): Ticket;
 };
 
 export function createTicketService(repository: TicketRepository): TicketService {
@@ -39,6 +45,16 @@ export function createTicketService(repository: TicketRepository): TicketService
         throw ApiError.notFound(`Ticket ${id} not found`);
       }
       return ticket;
+    },
+
+    update(id, input) {
+      // The repository reports "no row matched" by returning undefined, and the
+      // service is where that becomes the 404 the client sees.
+      const updated = repository.update(id, input);
+      if (!updated) {
+        throw ApiError.notFound(`Ticket ${id} not found`);
+      }
+      return updated;
     },
   };
 }
