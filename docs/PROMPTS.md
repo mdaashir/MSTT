@@ -84,6 +84,13 @@ Follow-up decisions from the plan review:
 > Add frontend tests for the error mapping, the API client's query building and the
 > formatting helpers, and finish the responsive layout for narrow screens.
 
+## 13 — Docker, smoke tool, seed and documentation
+
+> Dockerize the whole stack with multi-stage builds and minimal images, add a
+> uv-managed Python smoke tool and a seed script, and write the full documentation
+> set (architecture, API, Docker, development, README).
+
+
 
 
 

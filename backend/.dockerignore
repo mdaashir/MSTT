@@ -1,0 +1,11 @@
+# Build artifacts and local state must never reach the Docker build context: they
+# would invalidate the layer cache and inflate the image.
+node_modules
+dist
+data
+coverage
+.env
+.env.*
+npm-debug.log*
+Dockerfile
+.dockerignore

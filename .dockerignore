@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+dist
+**/dist
+**/data
+tools/smoke/.venv
+.git
+.gitignore
+*.db
+*.db-journal
+.env
+.env.*
+coverage
+README.md
+AGENTS.md
