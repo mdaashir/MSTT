@@ -15,22 +15,27 @@ import { EmptyState, ErrorState, LoadingState } from './states.js';
 export function TicketList({
   status,
   sort,
+  refreshToken = 0,
   onStatusChange,
   onSortChange,
   onSelect,
 }: {
   status: StatusFilter;
   sort: SortOrder;
+  refreshToken?: number;
   onStatusChange(next: StatusFilter): void;
   onSortChange(next: SortOrder): void;
   onSelect(id: number): void;
 }) {
   // "all" maps to undefined so the server applies its own default rather than
   // us sending a sentinel value it would reject.
-  const { tickets, loading, loadingMore, error, hasMore, loadMore, reload } = useTickets({
-    status: status === 'all' ? undefined : (status as Status),
-    sort,
-  });
+  const { tickets, loading, loadingMore, error, hasMore, loadMore, reload } = useTickets(
+    {
+      status: status === 'all' ? undefined : (status as Status),
+      sort,
+    },
+    refreshToken,
+  );
 
   return (
     <section className="panel" aria-labelledby="list-heading">

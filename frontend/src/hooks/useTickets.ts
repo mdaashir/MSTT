@@ -24,7 +24,7 @@ export type UseTicketsResult = {
   reload(): void;
 };
 
-export function useTickets(query: ListTicketsQuery): UseTicketsResult {
+export function useTickets(query: ListTicketsQuery, refreshToken = 0): UseTicketsResult {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -70,10 +70,11 @@ export function useTickets(query: ListTicketsQuery): UseTicketsResult {
     [],
   );
 
-  // Any change to the query starts a fresh first page.
+  // Any change to the query starts a fresh first page. `refreshToken` is how a
+  // create or update outside this hook asks for the same reload.
   useEffect(() => {
     void fetchPage({ ...query, offset: 0 }, 'replace');
-  }, [query.status, query.q, query.sort, fetchPage]);
+  }, [query.status, query.q, query.sort, refreshToken, fetchPage]);
 
   const loadMore = useCallback(() => {
     void fetchPage({ ...loadedQuery.current, offset: tickets.length }, 'append');

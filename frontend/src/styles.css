@@ -273,6 +273,68 @@ body {
   }
 }
 
+/* Forms: label above control, errors directly under the control they belong to. */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea,
+.field select {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  width: 100%;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+}
+
+.form-error {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #f3b9b4;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
 /* Responsive: one column below a comfortable reading width. */
 @media (max-width: 820px) {
   .layout {
