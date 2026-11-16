@@ -62,6 +62,13 @@ Follow-up decisions from the plan review:
 > toggle, loading/error/empty states, click a row to open details, and pagination
 > through the API rather than the client.
 
+## 9 — Create ticket UI
+
+> Add the create form with inline field errors that mirror the server rules, map a
+> server 400 back onto the matching fields, and make the new ticket appear without
+> a manual reload.
+
+
 
 
 
