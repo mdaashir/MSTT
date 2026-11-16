@@ -1,13 +1,22 @@
 # Mini Support Ticket Tracker
 
-A small full-stack web app for managing support tickets: create a ticket, list and
-filter them, open one, and move it through `Open → In Progress → Resolved`.
+A small full-stack support ticket tracker for managing customer and internal
+support tickets: create a ticket, list and filter them, open one, and move it
+through `Open → In Progress → Resolved`.
 
 - **Backend** — Node.js 20+ / Express 4 / TypeScript, SQLite via `better-sqlite3`
 - **Frontend** — React 18 + Vite + TypeScript, plain CSS
 - **Infra** — multi-stage Docker images, `docker compose`
+- **CI** — GitHub Actions: typecheck, lint, tests and build for both packages
+
+Features: ticket creation with validation, status filtering, debounced title
+search, newest/oldest sorting, priority badges, pagination, optimistic-free
+status updates, and a REST API with one consistent error format.
 
 No authentication: it is explicitly out of scope for this assessment.
+
+**Stack:** React · TypeScript · Vite · Node.js · Express · SQLite · Zod · Docker ·
+GitHub Actions · Vitest · Supertest
 
 ---
 
@@ -238,7 +247,8 @@ docs/
 | [`docs/API.md`](docs/API.md) | Every endpoint, parameter, error and example |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Layering, data flow, why each choice |
 | [`docs/DOCKER.md`](docs/DOCKER.md) | Images, stages, proxying, persistence |
-| [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | Setup, scripts, env, sharp edges |
+| [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | Setup, scripts, env, CI, sharp edges |
+| [`docs/SEO.md`](docs/SEO.md) | App metadata, generated crawler assets, repo topics |
 | [`docs/PROMPTS.md`](docs/PROMPTS.md) | Prompt log per major step |
 
 Docker images, stages and the proxy path are documented in

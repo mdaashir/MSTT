@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Support Ticket Tracker">
+  <!-- A ticket stub with a notch on each side, on the app's accent colour. -->
+  <rect width="32" height="32" rx="7" fill="#1f6feb" />
+  <path
+    d="M8 11.5h16a1.5 1.5 0 0 1 1.5 1.5v2a2.5 2.5 0 0 0 0 5v2a1.5 1.5 0 0 1-1.5 1.5H8A1.5 1.5 0 0 1 6.5 22v-2a2.5 2.5 0 0 0 0-5v-2A1.5 1.5 0 0 1 8 11.5Z"
+    fill="#ffffff"
+    fill-opacity="0.95"
+  />
+  <path d="M16 13v3M16 18.5v3" stroke="#1f6feb" stroke-width="1.6" stroke-linecap="round" />
+</svg>

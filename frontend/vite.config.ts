@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config';
 import { loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { seoAssets } from './seo';
 
 /**
  * Vite configuration.
@@ -13,11 +14,16 @@ import react from '@vitejs/plugin-react';
  * through `loadEnv` keeps this config free of Node globals.
  */
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', 'API_PROXY_TARGET');
+  const env = loadEnv(mode, '.', ['API_PROXY_TARGET', 'VITE_SITE_URL']);
   const proxyTarget = env.API_PROXY_TARGET || 'http://localhost:3000';
 
+  // Canonical and Open Graph tags need an absolute URL. Defaulting to localhost
+  // keeps development honest: a wrong value is obvious immediately rather than
+  // silently shipping production links that point at someone else's domain.
+  const siteUrl = env.VITE_SITE_URL || 'http://localhost:5173';
+
   return {
-    plugins: [react()],
+    plugins: [react(), seoAssets({ siteUrl })],
     server: {
       port: 5173,
       proxy: {

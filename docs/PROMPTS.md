@@ -96,6 +96,12 @@ Follow-up decisions from the plan review:
 > actually installs, typechecks, lints, tests and builds, then add a GitHub
 > Actions workflow that runs the same checks.
 
+## 15 — SEO
+
+> Do SEO for this repo — both the web app's metadata and the GitHub repo's
+> discoverability (description, topics, README keywords).
+
+
 
 
 
