@@ -4,19 +4,26 @@ import type { StatusFilter } from './components/FilterBar.js';
 import { TicketList } from './components/TicketList.js';
 import { TicketForm } from './components/TicketForm.js';
 import { TicketDetails } from './components/TicketDetails.js';
+import { SearchBar } from './components/SearchBar.js';
+import { useDebouncedValue } from './hooks/useDebouncedValue.js';
 
 /**
  * Application shell.
  *
- * Filter, sort and selection live here rather than inside a child so they survive
- * navigating between views. `refreshToken` is the one lever the create and update
- * flows pull to make the list re-read from the server.
+ * Filter, sort, search and selection live here rather than inside a child so they
+ * survive navigating between views. `refreshToken` is the one lever the create,
+ * update and delete flows pull to make the list re-read from the server.
  */
 export function App() {
   const [status, setStatus] = useState<StatusFilter>('all');
   const [sort, setSort] = useState<SortOrder>('newest');
+  const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [refreshToken, setRefreshToken] = useState(0);
+
+  // Keystrokes update the input instantly, but only the settled value reaches
+  // the API query, so typing does not fire a request per character.
+  const debouncedSearch = useDebouncedValue(search);
 
   const refreshList = () => setRefreshToken((token) => token + 1);
 
@@ -42,9 +49,11 @@ export function App() {
                 refreshList();
               }}
             />
+            <SearchBar value={search} onChange={setSearch} />
             <TicketList
               status={status}
               sort={sort}
+              search={debouncedSearch}
               refreshToken={refreshToken}
               onStatusChange={setStatus}
               onSortChange={setSort}
@@ -63,6 +72,11 @@ export function App() {
                 onUpdated={() => {
                   // A status change affects the list too: it may move into or out
                   // of the active filter, so re-read from the server.
+                  refreshList();
+                }}
+                onDeleted={() => {
+                  // The ticket is gone: drop the selection, then resync the list.
+                  setSelectedId(null);
                   refreshList();
                 }}
               />

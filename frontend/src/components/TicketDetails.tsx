@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { ticketsApi } from '../api/tickets.js';
+import { ApiClientError } from '../api/errors.js';
 import { useTicket } from '../hooks/useTicket.js';
 import { badgeClass, formatDate } from './format.js';
 import { StatusSelect } from './StatusSelect.js';
@@ -13,12 +16,39 @@ import { ErrorState, LoadingState } from './states.js';
 export function TicketDetails({
   id,
   onUpdated,
+  onDeleted,
 }: {
   id: number;
   /** Notifies the shell so the list can refresh after a status change. */
   onUpdated(ticket: { id: number }): void;
+  /** Clears the selection and refreshes the list. */
+  onDeleted(id: number): void;
 }) {
   const { ticket, loading, error, reload, setTicket } = useTicket(id);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  /**
+   * Delete asks for confirmation first because it is irreversible: the API does
+   * a hard delete and there is no undo.
+   */
+  const remove = async () => {
+    if (!ticket) return;
+    if (!window.confirm(`Delete ticket #${ticket.id} "${ticket.title}"? This cannot be undone.`)) {
+      return;
+    }
+
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await ticketsApi.delete(ticket.id);
+      onDeleted(ticket.id);
+    } catch (caught) {
+      setDeleteError(caught instanceof ApiClientError ? caught.message : 'Could not delete the ticket');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <section className="panel" aria-labelledby="details-heading">
@@ -72,6 +102,22 @@ export function TicketDetails({
               onUpdated(updated);
             }}
           />
+
+          <div className="details-actions">
+            <button
+              type="button"
+              className="button button-danger"
+              onClick={() => void remove()}
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting…' : 'Delete ticket'}
+            </button>
+            {deleteError ? (
+              <span className="field-error" role="alert">
+                {deleteError}
+              </span>
+            ) : null}
+          </div>
         </div>
       ) : null}
     </section>
