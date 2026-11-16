@@ -335,6 +335,50 @@ body {
   font-size: 0.85rem;
 }
 
+/* Details view: description first, then a compact metadata grid. */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.details-title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.details-description {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.details-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px 16px;
+  margin: 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.details-meta dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.details-meta dd {
+  margin: 2px 0 0;
+  font-size: 0.9rem;
+}
+
+.saving-hint {
+  font-size: 0.8rem;
+}
+
 /* Responsive: one column below a comfortable reading width. */
 @media (max-width: 820px) {
   .layout {
