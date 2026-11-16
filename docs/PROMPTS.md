@@ -29,4 +29,10 @@ Follow-up decisions from the plan review:
 > split, one error shape everywhere, and createApp(deps) so tests can inject an
 > in-memory database.
 
+## 3 — List, filter, search, sort and pagination
+
+> Add GET /api/tickets with status filter, case-insensitive title search, newest/
+> oldest sort and limit/offset pagination. It must keep returning a plain array.
+
+
 
