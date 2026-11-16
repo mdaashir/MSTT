@@ -16,3 +16,10 @@ Follow-up decisions from the plan review:
 > Completely dockerize it, make sure it is multi-staged with optimized minimal size
 > images. Make sure comments are clear and self-explanatory. Include complete
 > documentation (docs). Use npm for Node and uv for Python.
+
+## 1 — Backend data layer
+
+> Build the SQLite connection, the idempotent schema and the ticket domain types.
+> Priority/status values must come from one const list, and the config must be
+> parsed once from env with typed defaults.
+
