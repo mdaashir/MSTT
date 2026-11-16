@@ -45,6 +45,12 @@ Follow-up decisions from the plan review:
 > Add PATCH /api/tickets/:id. Only the fields present in the body change, at least
 > one field is required, updated_at is refreshed, and an unknown id is a 404.
 
+## 6 — Delete a ticket
+
+> Add DELETE /api/tickets/:id returning 204 with no body. Hard delete, 404 for an
+> unknown id.
+
+
 
 
 

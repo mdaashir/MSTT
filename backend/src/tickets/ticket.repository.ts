@@ -41,6 +41,7 @@ export type TicketRepository = {
   list(query: ListTicketsQuery): Ticket[];
   findById(id: number): Ticket | undefined;
   update(id: number, input: UpdateTicketInput): Ticket | undefined;
+  delete(id: number): boolean;
 };
 
 /**
@@ -153,6 +154,13 @@ export function createTicketRepository(db: DatabaseHandle): TicketRepository {
       }
 
       return findById(id);
+    },
+
+    delete(id: number): boolean {
+      // Hard delete, by design: there is no soft-delete column, and the README
+      // states it. `changes` tells the service whether the row existed at all.
+      const result = db.prepare('DELETE FROM tickets WHERE id = ?').run(id);
+      return result.changes > 0;
     },
   };
 }
